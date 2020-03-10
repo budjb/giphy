@@ -1,0 +1,114 @@
+div.giphy-image {
+  flex: 1;
+  margin: 1em;
+  align-content: center;
+}
+
+div.giphy-image div.giphy-actions {
+  text-align: right;
+}
+
+div.giphy-image span.fav {
+  color: red;
+  cursor: pointer;
+}
+
+div.giphy-image span.tag {
+  color: #555;
+  cursor: pointer;
+}
+
+div.giphy-image div.popup-content {
+  text-align: left;
+}
+
+div.giphy-image div.popup-content button.close-modal {
+  position: absolute;
+  border: 0;
+  border-radius: 50px;
+  outline: 0;
+  font-size: 1em;
+  background: transparent;
+  cursor: pointer;
+  top: 0.25em;
+  right: 0.5em;
+  padding: 0;
+  margin: 0;
+  color: #ddd;
+}
+
+div.giphy-image div.popup-content button.close-modal:hover {
+  color: #999;
+}
+
+div.image-details-modal {
+  margin: 1em auto;
+  width: 400px;
+}
+
+div.image-details-modal h3 {
+  text-align: center;
+}
+
+span.tag-pill {
+  display: inline-block;
+  background: #ddd;
+  border: 1px solid #666;
+  border-radius: 50px;
+  padding: 0.25em 1em;
+  margin: 0.5em;
+  position: relative;
+}
+
+div.addTagContainer {
+  clear: both;
+  margin: 1em 0.5em 0 0.5em;
+  display: flex;
+}
+
+div.addTagContainer button {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: #666;
+  font-size: 0.75em;
+}
+
+div.addTagContainer button:hover {
+  color: black;
+}
+
+div.addTagContainer form {
+  display: flex;
+}
+div.addTagContainer input {
+  padding: 0.5em;
+  font-size: 0.75em;
+  border: 1px solid #666;
+  border-radius: 4px;
+  flex: 1;
+  display: inline-block;
+}
+
+.tag-pill-remove {
+  display: none;
+}
+
+.tag-pill:hover .tag-pill-remove {
+  display: block;
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  top: -0.375em;
+  right: -0.375em;
+  background: white;
+  border: 1px solid #999;
+  border-radius: 5em;
+  text-align: center;
+  font-size: 0.75em;
+  padding: 0.1em;
+  cursor: pointer;
+  line-height: 0px;
+}
