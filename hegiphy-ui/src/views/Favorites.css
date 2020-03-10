@@ -1,0 +1,11 @@
+.tags-container {
+  text-align: center;
+}
+
+span.tag-pill {
+  cursor: pointer;
+}
+
+span.tag-pill.active {
+  background: rgb(125, 192, 255);
+}
