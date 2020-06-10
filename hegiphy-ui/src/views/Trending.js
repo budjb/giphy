@@ -21,7 +21,7 @@ const Trending = () => {
         .then(data => {
           setResults(data);
         })
-        .catch(console.log);
+        .catch(console.error);
     };
 
     fetchTrending();

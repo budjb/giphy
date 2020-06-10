@@ -1,0 +1,20 @@
+header.main-nav {
+  background: #444;
+  padding: 0.5em;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 10;
+
+  a,
+  span.logout {
+    margin: 0 1em;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  input.search {
+    max-width: 20rem;
+  }
+}
