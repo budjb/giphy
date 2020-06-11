@@ -1,11 +1,10 @@
 from flask import request, g
-from flask_cors import cross_origin
 from jose import jwt
 from functools import wraps
 from error import HttpException
 import config
-import json
 import requests
+
 
 def _get_token_auth_header():
     auth = request.headers.get("Authorization")
@@ -28,7 +27,9 @@ def requires_auth(f):
     def decorated(*args, **kwargs):
         token = _get_token_auth_header()
 
-        jwks = requests.get(f"https://{config.AUTH0_DOMAIN}/.well-known/jwks.json").json()
+        jwks = requests.get(
+            f"https://{config.AUTH0_DOMAIN}/.well-known/jwks.json"
+        ).json()
 
         unverified_header = jwt.get_unverified_header(token)
 
@@ -41,22 +42,23 @@ def requires_auth(f):
                     "kid": key["kid"],
                     "use": key["use"],
                     "n": key["n"],
-                    "e": key["e"]
+                    "e": key["e"],
                 }
 
         if not rsa_key:
             raise HttpException("Malformed authentication token", 401)
 
         try:
-            response = requests.get(f"https://{config.AUTH0_DOMAIN}/userinfo", headers={
-                "Authorization": f"Bearer {token}"
-            })
+            response = requests.get(
+                f"https://{config.AUTH0_DOMAIN}/userinfo",
+                headers={"Authorization": f"Bearer {token}"},
+            )
 
             response.raise_for_status()
 
             g.current_user = response.json()["email"]
             g.auth_token = token
-        except Exception as e:
+        except Exception:
             raise HttpException("Unauthorized", 401)
 
         return f(*args, **kwargs)
