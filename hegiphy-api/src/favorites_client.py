@@ -18,7 +18,7 @@ class FavoritesClient:
 
     def find_by_id_and_user(self, id, user):
         response = client.query(
-            TableName=config.DYNAMODB_FAVORITES_TABLE,
+            TableName=config.get("dynamodb_table"),
             KeyConditionExpression="pk = :user AND sk = :id",
             ExpressionAttributeValues={":user": {"S": user}, ":id": {"S": id}},
         )
@@ -30,7 +30,7 @@ class FavoritesClient:
 
     def find_by_user(self, user):
         response = client.query(
-            TableName=config.DYNAMODB_FAVORITES_TABLE,
+            TableName=config.get("dynamodb_table"),
             KeyConditionExpression="pk = :user",
             ExpressionAttributeValues={":user": {"S": user}},
         )
@@ -51,13 +51,13 @@ class FavoritesClient:
         if tags:
             item["tags"] = tags
 
-        client.put_item(TableName=config.DYNAMODB_FAVORITES_TABLE, Item=item)
+        client.put_item(TableName=config.get("dynamodb_table"), Item=item)
 
         return {"id": id, "user": user, "tags": tags}
 
     def delete_favorite(self, user, id):
         client.delete_item(
-            TableName=config.DYNAMODB_FAVORITES_TABLE,
+            TableName=config.get("dynamodb_table"),
             Key={"pk": {"S": user}, "sk": {"S": id}},
             ReturnValues="NONE",
         )
@@ -76,7 +76,7 @@ class FavoritesClient:
         tags.append(tag)
 
         result = client.update_item(
-            TableName=config.DYNAMODB_FAVORITES_TABLE,
+            TableName=config.get("dynamodb_table"),
             Key={"pk": {"S": user}, "sk": {"S": id}},
             UpdateExpression="set #tags = :tags",
             ExpressionAttributeValues={":tags": {"SS": tags}},
@@ -101,7 +101,7 @@ class FavoritesClient:
 
         if len(tags) > 0:
             result = client.update_item(
-                TableName=config.DYNAMODB_FAVORITES_TABLE,
+                TableName=config.get("dynamodb_table"),
                 Key={"pk": {"S": user}, "sk": {"S": id}},
                 UpdateExpression="SET #tags = :tags",
                 ExpressionAttributeValues={":tags": {"SS": tags}},
@@ -110,7 +110,7 @@ class FavoritesClient:
             )
         else:
             result = client.update_item(
-                TableName=config.DYNAMODB_FAVORITES_TABLE,
+                TableName=config.get("dynamodb_table"),
                 Key={"pk": {"S": user}, "sk": {"S": id}},
                 UpdateExpression="REMOVE #tags",
                 ExpressionAttributeNames={"#tags": "tags"},

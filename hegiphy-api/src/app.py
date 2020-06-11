@@ -7,7 +7,7 @@ from favorites_client import FavoritesClient, FavoriteNotFoundException
 from marshmallow import Schema, fields, validate, ValidationError
 import config
 
-GIPHY_CLIENT = GiphyClient(config.GIPHY_BASE_URL, config.GIPHY_API_KEY)
+GIPHY_CLIENT = GiphyClient(config.get("giphy_base_url"), config.get("giphy_api_key"))
 FAVORITES_CLIENT = FavoritesClient()
 
 APP = Flask(__name__)
@@ -123,7 +123,7 @@ def query_giphy():
 
 @APP.route("/giphy/trending", methods=["GET"])
 def get_trending_giphy():
-    limit = request.args.get("c")
+    limit = request.args.get("limit")
     rating = request.args.get("rating", "G")
 
     return Response(

@@ -26,10 +26,9 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = _get_token_auth_header()
+        base_url = config.get("auth0_domain")
 
-        jwks = requests.get(
-            f"https://{config.AUTH0_DOMAIN}/.well-known/jwks.json"
-        ).json()
+        jwks = requests.get(f"https://{base_url}/.well-known/jwks.json").json()
 
         unverified_header = jwt.get_unverified_header(token)
 
@@ -50,7 +49,7 @@ def requires_auth(f):
 
         try:
             response = requests.get(
-                f"https://{config.AUTH0_DOMAIN}/userinfo",
+                f"https://{base_url}/userinfo",
                 headers={"Authorization": f"Bearer {token}"},
             )
 
