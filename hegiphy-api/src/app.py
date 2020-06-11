@@ -5,6 +5,7 @@ from error import HttpException
 from functools import wraps
 from giphy_client import GiphyClient
 from favorites_client import FavoritesClient, FavoriteNotFoundException
+from marshmallow import Schema, fields, validate, ValidationError
 import requests
 import config
 from pprint import pprint
@@ -14,6 +15,12 @@ FAVORITES_CLIENT = FavoritesClient()
 
 APP = Flask(__name__)
 CORS(APP)
+
+MAX_TAG_LENGTH = 140
+
+class FavoriteSchema(Schema):
+    id = fields.String(required=True, validates=validate.Length(max=1024))
+    tags = fields.List(fields.String(validates=validate.Length(max=MAX_TAG_LENGTH)))
 
 @APP.errorhandler(HttpException)
 def handler_unauthenticated(e):
@@ -40,7 +47,10 @@ def create_favorite():
     data = request.json
     user = g.get("current_user")
 
-    # TODO: validate input w/marshmallow
+    try:
+        data = FavoriteSchema().load(data)
+    except ValidationError as err:
+        raise HttpException(err.messages, 400)
 
     return FAVORITES_CLIENT.create_favorite(user, data)
 
@@ -70,6 +80,9 @@ def delete_favorite(id):
 def add_tag(id, tag):
     user = g.get("current_user")
 
+    if len(tag) > MAX_TAG_LENGTH:
+        raise HttpException(f"maximum tag length is {MAX_TAG_LENGTH}", 400)
+
     try:
         return jsonify(FAVORITES_CLIENT.add_tag_to_favorite(id, user, tag))
     except FavoriteNotFoundException:
@@ -79,6 +92,9 @@ def add_tag(id, tag):
 @requires_auth
 def delete_tag(id, tag):
     user = g.get("current_user")
+
+    if len(tag) > MAX_TAG_LENGTH:
+        raise HttpException(f"maximum tag length is {MAX_TAG_LENGTH}", 400)
 
     try:
         return jsonify(FAVORITES_CLIENT.remove_tag_from_favorite(id, user, tag))
