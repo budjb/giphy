@@ -83,7 +83,7 @@ const Favorites = props => {
         setResults([]);
         setIsLoading(false);
       } else {
-        fetch(`${config.hegiphyApiBaseUri}/giphy/gifs?ids=${favorites.map(it => it.giphyId).join(',')}`, {
+        fetch(`${config.hegiphyApiBaseUri}/giphy/gifs?ids=${favorites.map(it => it.id).join(',')}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

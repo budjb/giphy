@@ -39,7 +39,7 @@ export const FavoritesRegistry = ({ children }) => {
   };
 
   const getFavorite = id => {
-    return data.find(it => it.giphyId ===id);
+    return data.find(it => it.id ===id);
   };
 
   const addFavorite = async id => {
@@ -52,7 +52,7 @@ export const FavoritesRegistry = ({ children }) => {
       },
       method: 'POST',
       body: JSON.stringify({
-        giphyId: id,
+        id
       }),
     })
       .then(() => setStale(true))
