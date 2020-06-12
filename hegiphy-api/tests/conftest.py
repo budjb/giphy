@@ -73,6 +73,6 @@ def call_handler():
 
 @pytest.fixture
 def handler():
-    from handler import handler
+    from lambda_handler import handler
 
     return handler

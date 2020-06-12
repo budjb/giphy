@@ -228,7 +228,7 @@ resource "aws_lambda_function" "hegiphy_api" {
   filename                       = local.lambda_dist_path
   source_code_hash               = filebase64sha256(local.lambda_dist_path)
   role                           = aws_iam_role.hegiphy_api_role.arn
-  handler                        = "lambda.handler"
+  handler                        = "lambda_handler.handler"
   timeout                        = 28
   publish                        = true
   runtime                        = "nodejs12.x"
