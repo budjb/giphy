@@ -27,7 +27,6 @@ nbdist/
 
 .DS_Store
 hegiphy-api/src/main/resources/application.properties
-hegiphy-ui/src/config.json
 
 .terraform/
 terraform.plan

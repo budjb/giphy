@@ -1,0 +1,6 @@
+{
+  "domain": "budb-hegiphy.auth0.com",
+  "clientId": "9MtcuIsGBr2h6omLSRi8hfcI49uFOX3F",
+  "audience": "https://hegiphy.budjb.com",
+  "hegiphyApiBaseUri": "http://localhost:8000"
+}
