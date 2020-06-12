@@ -51,7 +51,7 @@ def create_favorite():
     except ValidationError as err:
         raise HttpException(err.messages, 400)
 
-    return FAVORITES_CLIENT.create_favorite(user, data)
+    return FAVORITES_CLIENT.create_favorite(user, data), 201
 
 
 @APP.route("/favorites/<id>", methods=["GET"])

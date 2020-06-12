@@ -49,7 +49,7 @@ class FavoritesClient:
         item = {"pk": {"S": user}, "sk": {"S": id}}
 
         if tags:
-            item["tags"] = tags
+            item["tags"] = {"SS": tags}
 
         client.put_item(TableName=config.get("dynamodb_table"), Item=item)
 

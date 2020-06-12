@@ -7,10 +7,11 @@ import boto3
 
 
 class MockResponse:
-    def __init__(self, status_code=None, body=None, headers=None):
+    def __init__(self, status_code=None, body=None, headers=None, json=None):
         self.status_code = status_code
         self.body = body
         self.headers = headers
+        self.json = json
 
 
 @pytest.fixture(autouse=True)
@@ -55,9 +56,17 @@ def call_handler():
 
         r = handler(event, mock.MagicMock())
 
-        return MockResponse(
+        response = MockResponse(
             status_code=int(r["statusCode"]), body=r["body"], headers=r["headers"]
         )
+
+        if r["body"]:
+            try:
+                response.json = json.loads(r["body"])
+            except Exception:
+                pass
+
+        return response
 
     return _call_handler
 
