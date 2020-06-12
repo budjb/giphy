@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '../react-auth0-spa';
-import config from "../config.json";
+import config from "../config";
 
 export const FavoritesContext = React.createContext();
 export const useFavorites = () => React.useContext(FavoritesContext);

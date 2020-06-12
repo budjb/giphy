@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useAuth0 } from '../react-auth0-spa';
 import GiphyImageGrid from '../components/GiphyImageGrid';
 import Pagination from '../components/Pagination';
-import config from "../config.json";
+import config from "../config";
 
 const Search = props => {
   const { getTokenSilently } = useAuth0();

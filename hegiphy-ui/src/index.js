@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Auth0Provider } from "./react-auth0-spa";
-import config from "./config.json";
+import config from "./config";
 import history from "./utils/history";
 
 import App from './App';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '../react-auth0-spa';
 import GiphyImageGrid from '../components/GiphyImageGrid';
-import config from "../config.json";
+import config from "../config";
 
 
 const Trending = () => {
