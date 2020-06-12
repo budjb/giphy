@@ -210,6 +210,18 @@ data "aws_iam_policy_document" "lambda_policy" {
       "${aws_dynamodb_table.hegiphy_table.arn}/*",
     ]
   }
+
+  statement {
+    actions = [
+      "ssm:DescribeParam*",
+      "ssm:GetParam*",
+      "kms:Decrypt",
+    ]
+
+    resources = [
+      "*",
+    ]
+  }
 }
 
 resource "aws_iam_role" "hegiphy_api_role" {
