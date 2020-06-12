@@ -35,7 +35,7 @@ jobs:
       - image: circleci/python:3.6
     working_directory: ~/project/hegiphy-api
     steps:
-      - checkout
+      - checkout:
           path: ~/project
       - run: pip install tox
       - run: tox
@@ -45,7 +45,7 @@ jobs:
       - image: circleci/python:3.6
     working_directory: ~/project/hegiphy-api
     steps:
-      - checkout
+      - checkout:
           path: ~/project
       - run: ./build.sh
       - persist_to_workspace:
@@ -84,7 +84,7 @@ jobs:
       - image: circleci/node:12
     working_directory: ~/project/hegiphy-ui
     steps:
-      - checkout
+      - checkout:
           path: ~/project
       - aws-cli/install
       - attach_workspace:
