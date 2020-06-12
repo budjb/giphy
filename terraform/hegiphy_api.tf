@@ -231,7 +231,7 @@ resource "aws_lambda_function" "hegiphy_api" {
   handler                        = "lambda_handler.handler"
   timeout                        = 28
   publish                        = true
-  runtime                        = "nodejs12.x"
+  runtime                        = "python3.6"
   description                    = "HeGiphy API"
 
   tracing_config {
