@@ -1,0 +1,7 @@
+flask
+flask-cors
+requests
+python-jose
+boto3
+marshmallow
+aws-wsgi

@@ -1,1 +1,4 @@
-bin/
+.tox/
+__pycache__/
+*.pyc
+.coverage

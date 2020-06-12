@@ -1,0 +1,9 @@
+-r src/requirements.txt
+
+flake8
+bandit
+black
+coverage
+mock
+pytest
+requests-mock
