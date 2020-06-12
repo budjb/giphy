@@ -30,3 +30,5 @@ hegiphy-api/src/main/resources/application.properties
 
 .terraform/
 terraform.plan
+
+*tfvars.json

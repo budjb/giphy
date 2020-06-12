@@ -19,8 +19,10 @@ commands:
         default: terraform
     steps:
       - checkout
+      - run: mkdir -p ~/bin && wget -O ~/bin/sops https://github.com/mozilla/sops/releases/download/v3.5.0/sops-v3.5.0.linux && chmod +x ~/bin/sops
+      - run: ~/bin/sops -d secrets.tfvars.json > tfvars.json
       - run: terraform init -input=false -backend-config="bucket=hegiphy-terraform-state" -backend-config="key=terraform.tfstate" << parameters.path >>
-      - run: terraform plan -input=false -out terraform.plan << parameters.path >>
+      - run: terraform plan -input=false -var-file=tfvars.json -out terraform.plan << parameters.path >>
       - run: terraform apply terraform.plan
 
 orbs:

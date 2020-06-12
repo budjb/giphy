@@ -1,0 +1,5 @@
+creation_rules:
+  - path_regex: secrets\.tfvars\.json$
+    key_groups:
+    - kms:
+      - arn: arn:aws:kms:us-east-1:211643380035:key/32f6098f-5157-4625-ba23-75fe0117d986
