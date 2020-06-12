@@ -40,7 +40,7 @@ class FavoritesClient:
     def find_by_user_and_tag(self, user, tag):
         tag = tag.lower()
         favorites = self.find_by_user(user)
-        return list(filter(lambda it: tag in it.tags, favorites))
+        return [it for it in favorites if tag in it["tags"]]
 
     def create_favorite(self, user, favorite):
         id = favorite["id"]
@@ -78,7 +78,7 @@ class FavoritesClient:
         result = client.update_item(
             TableName=config.get("dynamodb_table"),
             Key={"pk": {"S": user}, "sk": {"S": id}},
-            UpdateExpression="set #tags = :tags",
+            UpdateExpression="SET #tags = :tags",
             ExpressionAttributeValues={":tags": {"SS": tags}},
             ExpressionAttributeNames={"#tags": "tags"},
             ReturnValues="ALL_NEW",
