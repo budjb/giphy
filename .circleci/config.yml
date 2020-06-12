@@ -91,14 +91,14 @@ jobs:
           at: ~/.aws
       - restore_cache:
           keys:
-            - ui-dependencies-{{ checksum "hegiphy-ui/package.json" }}
+            - ui-dependencies-{{ checksum "package.json" }}
             - ui-dependencies-
       - run:
           command: yarn install
       - save_cache:
           paths:
-            - hegiphy-ui/node_modules
-          key: ui-dependencies-{{ checksum "hegiphy-ui/package.json" }}
+            - node_modules
+          key: ui-dependencies-{{ checksum "package.json" }}
       - run: yarn build
       - s3sync:
           bucket: budjb-hegiphy-ui
@@ -126,7 +126,7 @@ workflows:
                 - master
       - deploy_ui:
           requires:
-            - aws_auth
+            - terraform
           filters:
             branches:
               only:
