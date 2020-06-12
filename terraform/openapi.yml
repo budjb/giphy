@@ -1,0 +1,21 @@
+openapi: "3.0.0"
+info:
+  version: v1
+  title: HeGiphy API
+  description: HeGiphy API
+paths:
+  /{proxy+}:
+    options:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        credentials: "${lambda_role}"
+        uri: "${lambda_arn}"
+        httpMethod: "POST"
+    x-amazon-apigateway-any-method:
+      responses: {}
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        credentials: "${lambda_role}"
+        uri: "${lambda_arn}"
+        httpMethod: "POST"
