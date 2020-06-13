@@ -1,3 +1,7 @@
 .tags-container {
   text-align: center;
 }
+
+.fav-pill {
+  font-size: 1rem !important;
+}

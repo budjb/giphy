@@ -7,6 +7,8 @@ import Pagination from '../components/Pagination';
 import { Notice } from '../components/AlertBox';
 import Loading from '../components/Loading';
 import config from '../config';
+import { Badge } from 'react-bootstrap';
+
 import './Favorites.css';
 
 const GiphyTagPill = ({ tag, history, isActive, hook }) => {
@@ -20,11 +22,10 @@ const GiphyTagPill = ({ tag, history, isActive, hook }) => {
     }
   };
 
-  const activeStyle = isActive ? 'active' : '';
   return (
-    <span className={`tag-pill ${activeStyle}`} onClick={handle}>
+    <Badge variant={isActive ? 'primary' : 'secondary'} className="fav-pill m-2 p-2 cursor-pointer" onClick={handle}>
       {tag}
-    </span>
+    </Badge>
   );
 };
 

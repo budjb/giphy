@@ -34,17 +34,23 @@ const TagsModal = ({ image, show, close, favorite }) => {
     return '';
   }
 
-  const tags = favorite.tags.map(it => (
-    <span className="giphy-tag-pill">
-      {it}
-      <span
-        className="giphy-tag-pill-remove rounded-circle bg-danger text-center text-white"
-        onClick={() => removeTag(image.id, it)}
-      >
-        <FontAwesomeIcon icon={faTimes} />
+  const tags = favorite.tags.length ? (
+    favorite.tags.map(it => (
+      <span className="giphy-tag-pill">
+        {it}
+        <span
+          className="giphy-tag-pill-remove rounded-circle bg-danger text-center text-white"
+          onClick={() => removeTag(image.id, it)}
+        >
+          <FontAwesomeIcon icon={faTimes} />
+        </span>
       </span>
-    </span>
-  ));
+    ))
+  ) : (
+    <center>
+      <em>This Giphy image doesn't have any tags yet!</em>
+    </center>
+  );
 
   return (
     <Modal show={show} onHide={close}>
