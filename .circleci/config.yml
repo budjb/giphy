@@ -89,8 +89,8 @@ jobs:
           keys:
             - ui-dependencies-{{ checksum "package.json" }}
             - ui-dependencies-
-      - run:
-          command: yarn format-check
+      - run: yarn install
+      - run: yarn format-check
       - save_cache:
           paths:
             - node_modules
@@ -110,8 +110,7 @@ jobs:
           keys:
             - ui-dependencies-{{ checksum "package.json" }}
             - ui-dependencies-
-      - run:
-          command: yarn install
+      - run: yarn install
       - save_cache:
           paths:
             - node_modules
