@@ -136,13 +136,13 @@ workflows:
             - aws_auth
             - test_api
             - build_api
+            - test_ui
           filters:
             branches:
               only:
                 - master
       - deploy_ui:
           requires:
-            - terraform
             - test_ui
           filters:
             branches:
