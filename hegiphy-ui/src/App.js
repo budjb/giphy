@@ -12,7 +12,7 @@ import Loading from './components/Loading';
 import Search from './views/Search';
 import Favorites from './views/Favorites';
 
-import './App.scss';
+import './scss/main.scss';
 
 const App = () => {
   const { loading, isAuthenticated, loginWithRedirect } = useAuth0();
@@ -31,7 +31,7 @@ const App = () => {
       <FavoritesRegistry>
         <Router history={history}>
           <NavBar />
-          <Container className="content">
+          <Container className="main-content px-0 mx-auto py-2">
             <Switch>
               <Route path="/favorites" component={Favorites} />
               <Route path="/search" component={Search} />

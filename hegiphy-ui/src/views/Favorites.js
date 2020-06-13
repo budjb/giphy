@@ -106,14 +106,14 @@ const Favorites = props => {
   if (results.length === 0) {
     return (
       <>
-        <h1>Favorite Giphy Images</h1>
+        <h1 className="text-center">Favorite Giphy Images</h1>
         <Notice>You have no favorite Giphy images.</Notice>
       </>
     );
   }
   return (
     <>
-      <h1>Favorite Giphy Images</h1>
+      <h1 className="text-center">Favorite Giphy Images</h1>
       <div className="tags-container">
         {getAllTags().map(it => (
           <GiphyTagPillRouter hook={setTagFilter} tag={it} isActive={it === tagFilter} />

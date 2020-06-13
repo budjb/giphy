@@ -7,9 +7,6 @@ import history from "./utils/history";
 
 import App from './App';
 
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 const onRedirectCallback = appState => {
   history.push(appState && appState.targetUrl ? appState.targetUrl : window.location.pathname);
 };

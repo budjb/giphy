@@ -69,7 +69,7 @@ const Search = props => {
 
   return (
     <>
-      <h1>Search Results for "{parseQuery()}"</h1>
+      <h1 className="text-center">Search Results for "{parseQuery()}"</h1>
       <GiphyImageGrid json={results} />
       <Pagination display={!isLoading} currentPage={parsePage()} totalPages={totalPages} handler={changePage} />
     </>

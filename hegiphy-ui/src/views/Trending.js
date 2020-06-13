@@ -12,7 +12,7 @@ const Trending = () => {
     const fetchTrending = async () => {
       const token = await getTokenSilently();
 
-      fetch(`${config.hegiphyApiBaseUri}/giphy/trending?c=9`, {
+      fetch(`${config.hegiphyApiBaseUri}/giphy/trending?limit=9`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,7 +32,7 @@ const Trending = () => {
 
   return (
     <>
-      <h1>Trending Giphy Images</h1>
+      <h1 className="text-center">Trending Giphy Images</h1>
       <GiphyImageGrid json={results} />
     </>
   );
