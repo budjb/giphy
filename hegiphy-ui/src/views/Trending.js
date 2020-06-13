@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '../react-auth0-spa';
 import GiphyImageGrid from '../components/GiphyImageGrid';
-import config from "../config";
-
+import config from '../config';
 
 const Trending = () => {
   const { getTokenSilently } = useAuth0();
@@ -12,7 +11,7 @@ const Trending = () => {
     const fetchTrending = async () => {
       const token = await getTokenSilently();
 
-      fetch(`${config.hegiphyApiBaseUri}/giphy/trending?c=9`, {
+      fetch(`${config.hegiphyApiBaseUri}/giphy/trending?limit=9`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -21,7 +20,7 @@ const Trending = () => {
         .then(data => {
           setResults(data);
         })
-        .catch(console.log);
+        .catch(console.error);
     };
 
     fetchTrending();
@@ -32,7 +31,7 @@ const Trending = () => {
 
   return (
     <>
-      <h1>Trending Giphy Images</h1>
+      <h1 className="text-center">Trending Giphy Images</h1>
       <GiphyImageGrid json={results} />
     </>
   );

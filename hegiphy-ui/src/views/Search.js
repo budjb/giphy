@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useAuth0 } from '../react-auth0-spa';
 import GiphyImageGrid from '../components/GiphyImageGrid';
 import Pagination from '../components/Pagination';
-import config from "../config";
+import config from '../config';
 
 const Search = props => {
   const { getTokenSilently } = useAuth0();
@@ -15,7 +15,7 @@ const Search = props => {
 
   const parseResults = data => {
     setResults(data);
-    const {pagination} = data;
+    const { pagination } = data;
     setTotalPages(Math.ceil(pagination.total_count / pageLimit));
   };
 
@@ -51,7 +51,7 @@ const Search = props => {
       })
         .then(res => {
           if (!res.ok) {
-            throw new Error(`HTTP status${  res.status}`);
+            throw new Error(`HTTP status${res.status}`);
           }
           return res;
         })
@@ -69,16 +69,9 @@ const Search = props => {
 
   return (
     <>
-      <h1>
-        Search Results for "{parseQuery()}"
-      </h1>
+      <h1 className="text-center">Search Results for "{parseQuery()}"</h1>
       <GiphyImageGrid json={results} />
-      <Pagination
-        display={!isLoading}
-        currentPage={parsePage()}
-        totalPages={totalPages}
-        handler={changePage}
-      />
+      <Pagination display={!isLoading} currentPage={parsePage()} totalPages={totalPages} handler={changePage} />
     </>
   );
 };

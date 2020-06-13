@@ -6,7 +6,7 @@ import { useAuth0 } from '../react-auth0-spa';
 import Pagination from '../components/Pagination';
 import { Notice } from '../components/AlertBox';
 import Loading from '../components/Loading';
-import config from "../config";
+import config from '../config';
 import './Favorites.css';
 
 const GiphyTagPill = ({ tag, history, isActive, hook }) => {
@@ -14,8 +14,7 @@ const GiphyTagPill = ({ tag, history, isActive, hook }) => {
     if (!isActive) {
       history.push(`/favorites?tag=${tag}`);
       hook(tag);
-    }
-    else {
+    } else {
       history.push('/favorites');
       hook(undefined);
     }
@@ -103,34 +102,29 @@ const Favorites = props => {
 
   if (isLoading) {
     return <Loading />;
-  } if (results.length === 0) {
+  }
+  if (results.length === 0) {
     return (
       <>
-        <h1>Favorite Giphy Images</h1>
+        <h1 className="text-center">Favorite Giphy Images</h1>
         <Notice>You have no favorite Giphy images.</Notice>
       </>
     );
-  } 
-    return (
-      <>
-        <h1>Favorite Giphy Images</h1>
-        <div className="tags-container">
-          {getAllTags().map(it => (
-            <GiphyTagPillRouter hook={setTagFilter} tag={it} isActive={it === tagFilter} />
-          ))}
-        </div>
-        <GiphyImageGrid json={results} />
-        {totalPages > 1 && (
-          <Pagination
-            display={!isLoading}
-            currentPage={parsePage()}
-            totalPages={totalPages}
-            handler={changePage}
-          />
-        )}
-      </>
-    );
-  
+  }
+  return (
+    <>
+      <h1 className="text-center">Favorite Giphy Images</h1>
+      <div className="tags-container">
+        {getAllTags().map(it => (
+          <GiphyTagPillRouter hook={setTagFilter} tag={it} isActive={it === tagFilter} />
+        ))}
+      </div>
+      <GiphyImageGrid json={results} />
+      {totalPages > 1 && (
+        <Pagination display={!isLoading} currentPage={parsePage()} totalPages={totalPages} handler={changePage} />
+      )}
+    </>
+  );
 };
 
 export default withRouter(Favorites);

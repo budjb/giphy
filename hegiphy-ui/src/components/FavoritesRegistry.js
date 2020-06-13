@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '../react-auth0-spa';
-import config from "../config";
+import config from '../config';
 
 export const FavoritesContext = React.createContext();
 export const useFavorites = () => React.useContext(FavoritesContext);
@@ -39,7 +39,7 @@ export const FavoritesRegistry = ({ children }) => {
   };
 
   const getFavorite = id => {
-    return data.find(it => it.id ===id);
+    return data.find(it => it.id === id);
   };
 
   const addFavorite = async id => {
@@ -52,7 +52,7 @@ export const FavoritesRegistry = ({ children }) => {
       },
       method: 'POST',
       body: JSON.stringify({
-        id
+        id,
       }),
     })
       .then(() => setStale(true))

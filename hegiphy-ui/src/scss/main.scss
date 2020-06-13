@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&family=Roboto&display=swap');
+
+$headings-font-family: 'Oswald', sans-serif;
+
+@import 'bootstrap/bootstrap.scss';
+@import 'utils';
+@import 'layout';
+
+@import 'imageGrid';
