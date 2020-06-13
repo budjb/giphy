@@ -8,12 +8,13 @@ body {
 }
 
 header.main-nav {
-  a, .signout {
+  a,
+  .signout {
     color: white;
     text-decoration: none;
     cursor: pointer;
   }
-  
+
   .navbar-dark {
     background: #444;
   }

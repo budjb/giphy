@@ -6,7 +6,7 @@ import { useAuth0 } from '../react-auth0-spa';
 import Pagination from '../components/Pagination';
 import { Notice } from '../components/AlertBox';
 import Loading from '../components/Loading';
-import config from "../config";
+import config from '../config';
 import './Favorites.css';
 
 const GiphyTagPill = ({ tag, history, isActive, hook }) => {

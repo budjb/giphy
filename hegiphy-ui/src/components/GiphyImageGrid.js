@@ -6,7 +6,7 @@ import { faArrowLeft, faStar as faStarSolid, faTags, faTimes, faPlus } from '@fo
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 import { useFavorites } from './FavoritesRegistry';
 
-const FavoriteButton = ({isFavorite}) => {
+const FavoriteButton = ({ isFavorite }) => {
   if (isFavorite) {
     return <FontAwesomeIcon icon={faStarSolid} />;
   } else {
@@ -34,11 +34,13 @@ const TagsModal = ({ image, show, close, favorite }) => {
     return '';
   }
 
-
   const tags = favorite.tags.map(it => (
     <span className="giphy-tag-pill">
       {it}
-      <span className="giphy-tag-pill-remove rounded-circle bg-danger text-center text-white" onClick={() => removeTag(image.id, it)}>
+      <span
+        className="giphy-tag-pill-remove rounded-circle bg-danger text-center text-white"
+        onClick={() => removeTag(image.id, it)}
+      >
         <FontAwesomeIcon icon={faTimes} />
       </span>
     </span>
@@ -51,10 +53,10 @@ const TagsModal = ({ image, show, close, favorite }) => {
       </Modal.Header>
       <Modal.Body>
         {tags}
-        { showAdd && (
+        {showAdd && (
           <Form onSubmit={handleAddTag} className="mt-2">
             <InputGroup>
-              <Form.Control placeholder="Tag name..." type="text" ref={ref => (addRef = ref)}/>
+              <Form.Control placeholder="Tag name..." type="text" ref={ref => (addRef = ref)} />
               <InputGroup.Append>
                 <Button variant="secondary" type="submit">
                   <FontAwesomeIcon icon={faPlus} />
@@ -65,16 +67,20 @@ const TagsModal = ({ image, show, close, favorite }) => {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={close}>Close</Button>
-        <Button variant="primary" onClick={() => setShowAdd(true)}>Add Tag</Button>
+        <Button variant="secondary" onClick={close}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={() => setShowAdd(true)}>
+          Add Tag
+        </Button>
       </Modal.Footer>
     </Modal>
-  )
+  );
 };
 
 const ImageModal = ({ show, image, close }) => {
   const { addFavorite, removeFavorite, getFavorite } = useFavorites();
-  const [ isBusy, setIsBusy ] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [showTags, setShowTags] = useState(false);
 
   const showClass = show ? 'show' : '';
@@ -82,11 +88,14 @@ const ImageModal = ({ show, image, close }) => {
   const favorite = image ? getFavorite(image.id) : false;
   const isFavorite = favorite !== undefined;
 
-  const handleKeyDown = useCallback((event) => {
-    if (event.keyCode === 27) {
-      close();
-    }
-  }, [close]);
+  const handleKeyDown = useCallback(
+    event => {
+      if (event.keyCode === 27) {
+        close();
+      }
+    },
+    [close]
+  );
 
   if (show) {
     window.addEventListener('keydown', handleKeyDown);
@@ -107,15 +116,12 @@ const ImageModal = ({ show, image, close }) => {
       } else {
         await addFavorite(image.id);
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err); // TODO: display to user somehow
-    }
-    finally {
+    } finally {
       setIsBusy(false);
     }
   }, [image, isFavorite, isBusy, setIsBusy, addFavorite, removeFavorite]);
-
 
   return (
     <div className={`image-modal d-flex flex-column ${showClass}`}>
@@ -126,16 +132,16 @@ const ImageModal = ({ show, image, close }) => {
           </span>
         </div>
         <div>
-          { isFavorite && (
+          {isFavorite && (
             <>
-              <TagsModal image={image} favorite={favorite} show={showTags} close={() => setShowTags(false)}/>
-              <span className="p-1 cursor-pointer" style={{color: 'white'}} onClick={() => setShowTags(true)}>
-                <FontAwesomeIcon icon={faTags}/>
+              <TagsModal image={image} favorite={favorite} show={showTags} close={() => setShowTags(false)} />
+              <span className="p-1 cursor-pointer" style={{ color: 'white' }} onClick={() => setShowTags(true)}>
+                <FontAwesomeIcon icon={faTags} />
               </span>
             </>
           )}
           <span className={`p-1 cursor-pointer ${isFavorite && 'favorite'}`} onClick={toggleFavorite}>
-            <FavoriteButton isFavorite={isFavorite}/>
+            <FavoriteButton isFavorite={isFavorite} />
           </span>
         </div>
       </div>
