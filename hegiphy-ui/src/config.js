@@ -7,7 +7,7 @@ const staticConfig = {
 
 const localConfig = {
   ...staticConfig,
-  "hegiphyApiBaseUri": "https://api.hegiphy.budjb.local:8000"
+  "hegiphyApiBaseUri": "http://localhost:8000"
 };
 
 const productionConfig = {
