@@ -144,6 +144,7 @@ workflows:
       - deploy_ui:
           requires:
             - test_ui
+            - aws_auth
           filters:
             branches:
               only:
