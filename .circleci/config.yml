@@ -78,6 +78,24 @@ jobs:
           at: ~/project
       - terraform
 
+  test_ui:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/project/hegiphy-ui
+    steps:
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          keys:
+            - ui-dependencies-{{ checksum "package.json" }}
+            - ui-dependencies-
+      - run:
+          command: yarn format-check
+      - save_cache:
+          paths:
+            - node_modules
+          key: ui-dependencies-{{ checksum "package.json" }}
+
   deploy_ui:
     docker:
       - image: circleci/node:12
@@ -112,6 +130,7 @@ workflows:
               only:
                 - master
       - test_api
+      - test_ui
       - build_api
       - terraform:
           requires:
@@ -125,6 +144,7 @@ workflows:
       - deploy_ui:
           requires:
             - terraform
+            - test_ui
           filters:
             branches:
               only:
