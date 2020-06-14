@@ -24,7 +24,7 @@ export const ShareModal = ({ show, close, url, title }) => {
   const copyUrlToClipboard = () => {
     var dummy = document.createElement('input');
     document.body.appendChild(dummy);
-    dummy.setAttribute('value', window.location.href);
+    dummy.setAttribute('value', url);
     dummy.select();
     document.execCommand('copy');
     document.body.removeChild(dummy);
