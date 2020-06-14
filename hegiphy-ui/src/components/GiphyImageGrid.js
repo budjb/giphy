@@ -2,7 +2,14 @@ import React, { useState, useCallback } from 'react';
 // import GiphyImage from './GiphyImage';
 import { Container, Col, Image, Row, Spinner, Modal, Button, InputGroup, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faStar as faStarSolid, faTags, faTimes, faPlus, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faStar as faStarSolid,
+  faTags,
+  faTimes,
+  faPlus,
+  faShareAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 import { useFavorites } from './FavoritesRegistry';
 import { ShareModal } from './ShareModal';
@@ -133,8 +140,13 @@ const ImageModal = ({ show, image, close }) => {
 
   return (
     <div className={`image-modal d-flex flex-column ${showClass}`}>
-      { image && (
-        <ShareModal show={showShare} close={() => setShowShare(false)} url={image.images.original.url} title={image.title}/>
+      {image && (
+        <ShareModal
+          show={showShare}
+          close={() => setShowShare(false)}
+          url={image.images.original.url}
+          title={image.title}
+        />
       )}
       <div className="d-flex flex-row align-items-center p-2">
         <div className="d-block flex-grow-1 flex-shrink-0">
@@ -144,7 +156,7 @@ const ImageModal = ({ show, image, close }) => {
         </div>
         <div>
           <span className="p-1 cursor-pointer" onClick={() => setShowShare(true)}>
-            <FontAwesomeIcon icon={faShareAlt}/>
+            <FontAwesomeIcon icon={faShareAlt} />
           </span>
           {isFavorite && (
             <>
