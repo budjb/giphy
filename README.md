@@ -2,7 +2,51 @@
 
 Search the Giphy image database, and save and categorize your favorite images!
 
-# Running
+# High-Level Architecture
+
+![Architecture](architecture.png)
+
+This application is organized as a SPA (Single Page Application) built with React and an
+API built with Flask/Python.
+
+## UI
+
+The React UI compiles to a set of static assets (e.g. Javascript, CSS, images, etc) which are
+uploaded to an AWS S3 bucket, which has been configured for web hosting. Those assets
+are served to the general internet through a CloudFront CDN distribution via HTTPS.
+
+## API
+
+The API is a flask application built with Python. A set of RESTful endpoints are exposed by
+the application to serve as a proxy to several Giphy endpoints, to allow storing favorite
+images for a logged in user, and allow tagging of images marked as favorites. The application
+deployed as a Lambda to AWS behind an API Gateway, and utilizes an AWS/WSGI middleware to
+translate to/from API Gateway payloads.
+
+Favorites and tag data is stored in an AWS DynamoDB table.
+
+## Auth0
+
+The Auth0 service is used for end-user authentication. Clients communicate directly with Auth0's
+web services during the authentication process, and the API backend communicates with Auth0's
+API to validate end-user authentication tokens (which themselves were provided by Auth0).
+
+## CI/CD and Release Pipeline
+
+Terraform and CircleCI are used to validate and release the application.
+
+The process to submit code to and release the application follows the typical Git flow. Features
+are developed in a feature branch on the main repository, and pull requests are created against
+the master branch of the source code repository. Feature branches start a validation flow with
+CircleCI, where tests are run and code format validation is conducted. Once these checks pass,
+the pull request may be merged into the master branch.
+
+Once code is submitted to the master branch, the same checks as above are run, and the release
+process starts once those checks pass again. Most of the heavy lifting of deployment happens with
+Terraform, which describes the infrastructure required to run the application. This also uploads
+the compiled API to AWS Lambda. The UI assets are uploaded to S3 separately via an AWS console commad.
+
+# Running Locally
 
 Use the following steps to run the HEGiphy service.
 
@@ -10,15 +54,51 @@ Use the following steps to run the HEGiphy service.
 
 To run the applications contained in this service, the following prerequisites are required.
 
-### MongoDB
+### AWS
 
-A MongoDB instance is used to store user data - specifically records of what Giphy images
-are a user's favorites. An easy way to get started is to simply install and run a MongoDB
-instance locally, and connect to the database over `localhost` with default login
-`credentials`.
+The application is written to run on AWS and utilizes AWS services. To run the application,
+an AWS account is required.
 
-The details of how to install and configure a MongoDB instance are left to the user, but
-the URI and credentials will need to be used to run the `hegiphy-api` project.
+#### CircleCI IAM Role
+
+An IAM role is required for CircleCI to be able to successfully deploy the infrasturcture for
+the service via Terraform. The current configuration stores the programmatic access keys as
+environment variables in a CircleCI context, and those environment variables are provided to
+and are referenced by the configuration file.
+
+#### S3 Buckets
+
+Two S3 buckets are required: one to contain the shared Terraform state, and one to store the UI
+assets. The naming of these buckets are not important, but the CircleCI and Terraform files must
+be updated with these names. While technically possible, one bucket should not be used for both
+purposes.
+
+In the CircleCI config file (`.circleci/config.yml`), references to the `s3sync` and `terraform`
+commands should be updated so that the correct bucket names are provided as parameters. The `s3sync`
+command takes the name of the S3 bucket that will host UI assets, while the `terraform` command
+takes the name of the S3 bucket that will contain Terraform state.
+
+#### KMS
+
+A new KMS key must be created for the storage of secrets using Mozilla SOPS. The ARN of the new
+key must be used in the SOPS configuration file (`.sops.yaml`) and in the appropriate sections
+of the Terraform files (see `main.tf`).
+
+#### Route53
+
+Terraform creates DNS entries for the service. The Terraform files must be updated with the AWS-
+hosted zone and the names of the DNS records must be updated to match the zone they're hosted under.
+
+### SOPS
+
+Mozilla SOPS is used to version-control secrets within the source code repostory. The configuration
+of this application causes SOPS to use a KMS key to encrypt configuration data (stored as JSON).
+
+During deployment, CircleCI will decrypt the file with SOPS (and the configured KMS key) and provided
+the values contained within to Terraform as Terraform variables.
+
+Currently, the only value that must be present is the `giphy_api_key` entry, which should contain the
+API key provided by Giphy to be used by the API service.
 
 ### Auth0
 
@@ -82,60 +162,82 @@ of the Giphy API key, which will be needed to configure the HEGiphy API applicat
 
 ### Configure
 
-To configure the HEGiphy API application, edit the `hegipiy-api/src/main/resources/application.properties`
-file. You will need to plug in the values you obtained from the Auth0 setup. Replace the values in the
-following template surrounded by `<` and `>`.
+At a minimum, an AWS account with the following configured is required:
 
-```properties
-auth0.audience=<Auth0 API audience>
-spring.security.oauth2.resourceserver.jwt.issuer-uri=<Auth0 issuer, (https://tenant.auth0.com)>
-giphy.base-uri=https://api.giphy.com/v1
-spring.data.mongodb.uri=mongodb://<host>/<db>
-giphy.api-key=<Giphy API key>
+- A DynamoDB table.
+- An SSM entry for the `giphy_api_key` value.
 
-```
+The AWS CLI must be installed and he AWS account must be configured in the shell that will
+run the API application.
 
 ### Starting
 
-To start the application, start a shell and navigate to the `hegipy-api` directory. Then, run:
+#### API
 
-```properties
-./gradlew bootRun
+The API application must be configured for the specifics of the deployment environment. In particular,
+see the `config.py` file and update the following snippet accordingly:
+
+```python
+_STATIC_CONFIG = {
+    "auth0_domain": os.environ.get("AUTH0_DOMAIN", "TODO: replace with value provided by Auth0"),
+    "dynamodb_table": os.environ.get("DYNAMODB_TABLE", "TODO: replace with your DynamoDB table name"),
+    "giphy_base_url": os.environ.get("GIPHY_BASE_URL", "https://api.giphy.com/v1"),
+    "giphy_api_key": os.environ.get("GIPHY_API_KEY")
+}
+```
+
+To start the API application, start a shell, configure the AWS account in the shell, and navigate to the
+`hegipy-api` directory. Then, run:
+
+```bash
+./start.sh
 ```
 
 The application should start without errors and you should see log lines stating:
 
-> Tomcat started on port(s): 8080 (http) with context path ''
-> Started Application in 2.442 seconds (JVM running for 8.124)
+> * Serving Flask app "app" (lazy loading)
+> * Environment: production
+>   WARNING: This is a development server. Do not use it in a production deployment.
+>   Use a production WSGI server instead.
+> * Debug mode: on
+> * Running on http://127.0.0.1:8000/ (Press CTRL+C to quit)
+> * Restarting with stat
+> * Debugger is active!
+> * Debugger PIN: 896-388-529
 
-## Running the UI Application
+## UI
 
 Note that you will need to have NodeJS v12.14 or a version compatible with it, along with
 yarn installed.
 
-### Configure
+Update the following snippet in the `config.js` file:
 
-To configure the HEGiphy UI application, edit the file `hegiphy-ui/src/config.json`.
-You will need to plug in the values you obtained from the Auth0 setup. Replace the values in the
-following template surrounded by `<` and `>`.
-
-```json
-{
-  "domain": "<Auth0 issuer (tenant.auth0.com)>",
-  "clientId": "<Auth0 Application Client ID>",
-  "audience": "<Auth0 API Audience>",
-  "hegiphyApiBaseUri": "http://localhost:8080"
-}
+```javascript
+const staticConfig = {
+  domain: 'TODO: replace with the value provided by Auth0',
+  clientId: 'TODO: replace with the value provided by Auth0',
+  audience: 'TODO: replace with the value provided by Auth0'
+};
 ```
-
-### Starting
 
 To start the application, start a shell and navigate to the `hegipy-ui` directory. Then, run:
 
-```shell script
+```bash
 yarn install
 yarn start
 ```
+
+When successful, the output should resemble the following:
+
+> Compiled successfully!
+> 
+> You can now view hegiph-ui in the browser.
+> 
+>   Local:            https://localhost:3000
+>   On Your Network:  https://192.168.100.119:3000
+> 
+> Note that the development build is not optimized.
+> To create a production build, use yarn build.
 
 # Using HEGiphy
 
@@ -149,24 +251,25 @@ top 9 trending Giphy images.
 
 ## Favorites
 
-Each displayed Giphy image has a heart icon underneath the image. To mark an image as one of your
-favorites, click the heart icon. The icon will change from an outline to solid. To remove
-the image from your favorites, simply click the solid heart icon, which will make the icon revert
-to an outlined heart image.
+Each displayed Giphy image may be clicked to view a larger version of it. While the image is zoomed
+in, users may click the heart icon to mark an image as  a favorite. The icon will change from an
+outline to solid. To remove the image as a favorite, simply click the solid heart icon, which will
+make the icon revert to an outlined heart image.
 
-To view only your favorite images, click the Favorites link at the top of the page. Nine images
-per page will be shown, and you may navigate through pages using the links at the bottom of the
-page (if there is more than one page).
+To view only favorite images, click the Favorites link at the top of the page. Nine images
+per page will be shown, and additional pages may be navigated to using the links at the bottom of the
+page (if there is more than one page). Making an image a favorite also turns on the ability to tag,
+or categorized, images with user-defined tag names.
 
-If you have categorized any images using tags, those tag names will appear at the top of the page.
-Click any of these tags to limit your view to only those images who have that matching tag. Clicking
+If images have been categorized using tags, those tag names will appear at the top of the page.
+Clicking any of these tags will limit the view to only those images that have the matching tag. Clicking
 the active tag will revert the page back to an unfiltered view of favorite images.
 
 Once an image has been marked as a favorite, a new icon that looks like a price tag will appear next
 to the heart icon. This may be used to categorize the image using tags. When the price tag icon is
 clicked, a popup will appear that shows all of the current tags assigned to the image, with a link
-to add additional tags. Tag names may be whatever you like, and any images that share a specific tag
-may be considered part of the same "category". Tags may also be removed from within the popup by
+to add additional tags. Tag names are arbitrary, and any images that share a specific tag may be
+considered part of the same "category". Tags may also be removed from within the popup by
 hovering over the tag and clicking the X icon that appears.
 
 ## Searching
