@@ -67,13 +67,19 @@ const Search = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
-  return (
-    <>
-      <h1 className="text-center">Search Results for "{parseQuery()}"</h1>
-      <GiphyImageGrid json={results} />
-      <Pagination display={!isLoading} currentPage={parsePage()} totalPages={totalPages} handler={changePage} />
-    </>
-  );
+  if (!results.data) {
+    return <h1 className="text-center">No results for "{parseQuery()}"</h1>;
+  } else {
+    return (
+      <>
+        <h1 className="text-center">Search Results for "{parseQuery()}"</h1>
+        <GiphyImageGrid json={results} />
+        {totalPages > 1 && (
+          <Pagination display={!isLoading} currentPage={parsePage()} totalPages={totalPages} handler={changePage} />
+        )}
+      </>
+    );
+  }
 };
 
 export default withRouter(Search);
