@@ -108,9 +108,8 @@ const Favorites = props => {
       <Jumbotron>
         <h1>You don't have any favorites!</h1>
         <p>
-          Yet, anyway. Check out <Link to="/">trending images</Link> or do a search
-          to find some GIFs that brighten your day, and click the star so you can find them
-          here in the future!
+          Yet, anyway. Check out <Link to="/">trending images</Link> or do a search to find some GIFs that brighten your
+          day, and click the star so you can find them here in the future!
         </p>
       </Jumbotron>
     );
