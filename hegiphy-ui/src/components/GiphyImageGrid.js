@@ -2,9 +2,10 @@ import React, { useState, useCallback } from 'react';
 // import GiphyImage from './GiphyImage';
 import { Container, Col, Image, Row, Spinner, Modal, Button, InputGroup, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faStar as faStarSolid, faTags, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faStar as faStarSolid, faTags, faTimes, faPlus, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 import { useFavorites } from './FavoritesRegistry';
+import { ShareModal } from './ShareModal';
 
 const FavoriteButton = ({ isFavorite }) => {
   if (isFavorite) {
@@ -88,6 +89,7 @@ const ImageModal = ({ show, image, close }) => {
   const { addFavorite, removeFavorite, getFavorite } = useFavorites();
   const [isBusy, setIsBusy] = useState(false);
   const [showTags, setShowTags] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   const showClass = show ? 'show' : '';
 
@@ -131,6 +133,9 @@ const ImageModal = ({ show, image, close }) => {
 
   return (
     <div className={`image-modal d-flex flex-column ${showClass}`}>
+      { image && (
+        <ShareModal show={showShare} close={() => setShowShare(false)} url={image.images.original.url} title={image.title}/>
+      )}
       <div className="d-flex flex-row align-items-center p-2">
         <div className="d-block flex-grow-1 flex-shrink-0">
           <span className="p-2 cursor-pointer" onClick={close}>
@@ -138,6 +143,9 @@ const ImageModal = ({ show, image, close }) => {
           </span>
         </div>
         <div>
+          <span className="p-1 cursor-pointer" onClick={() => setShowShare(true)}>
+            <FontAwesomeIcon icon={faShareAlt}/>
+          </span>
           {isFavorite && (
             <>
               <TagsModal image={image} favorite={favorite} show={showTags} close={() => setShowTags(false)} />

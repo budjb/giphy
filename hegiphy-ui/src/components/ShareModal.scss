@@ -1,0 +1,48 @@
+.share-modal {
+  .share-button {
+    display: inline-block;
+    background: none;
+    outline: none;
+    border: 0;
+
+    font-size: 6rem;
+    font-weight: 300;
+    line-height: 1.2;
+
+    &.facebook {
+      color: #4267b2;
+    }
+
+    &.twitter {
+      color: #1da1f2;
+    }
+
+    &.email {
+      color: #ffad45;
+    }
+  }
+
+  p.copy-url {
+    background-color: #e9ecef;
+    opacity: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    flex: 1 1;
+    min-width: 0;
+    margin-bottom: 0;
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem 0 0 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+}
