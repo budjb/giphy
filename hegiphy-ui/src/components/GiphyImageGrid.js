@@ -138,40 +138,45 @@ const ImageModal = ({ show, image, close }) => {
     }
   }, [image, isFavorite, isBusy, setIsBusy, addFavorite, removeFavorite]);
 
+  // Since we're relying on CSS transforms to render a scroll-into-view effect,
+  // the background MUST be rendered (and hidden out of view) even when the modal
+  // should not be shown for the effect to function.
   return (
     <div className={`image-modal d-flex flex-column ${showClass}`}>
       {image && (
-        <ShareModal
-          show={showShare}
-          close={() => setShowShare(false)}
-          url={image.images.original.url}
-          title={image.title}
-        />
-      )}
-      <div className="d-flex flex-row align-items-center p-2">
-        <div className="d-block flex-grow-1 flex-shrink-0">
-          <span className="p-2 cursor-pointer" onClick={close}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </span>
-        </div>
-        <div>
-          <span className="p-1 cursor-pointer" onClick={() => setShowShare(true)}>
-            <FontAwesomeIcon icon={faShareAlt} />
-          </span>
-          {isFavorite && (
-            <>
-              <TagsModal image={image} favorite={favorite} show={showTags} close={() => setShowTags(false)} />
-              <span className="p-1 cursor-pointer" style={{ color: 'white' }} onClick={() => setShowTags(true)}>
-                <FontAwesomeIcon icon={faTags} />
+        <>
+          <ShareModal
+            show={showShare}
+            close={() => setShowShare(false)}
+            url={image.images.original.url}
+            title={image.title}
+          />
+          <div className="d-flex flex-row align-items-center p-2">
+            <div className="d-block flex-grow-1 flex-shrink-0">
+              <span className="p-2 cursor-pointer" onClick={close}>
+                <FontAwesomeIcon icon={faArrowLeft} />
               </span>
-            </>
-          )}
-          <span className={`p-1 cursor-pointer ${isFavorite && 'favorite'}`} onClick={toggleFavorite}>
-            <FavoriteButton isFavorite={isFavorite} />
-          </span>
-        </div>
-      </div>
-      {image && <img src={image.images.original.url} alt={image.title} className="flex-grow-1 giphy-image" />}
+            </div>
+            <div>
+              <span className="p-1 cursor-pointer" onClick={() => setShowShare(true)}>
+                <FontAwesomeIcon icon={faShareAlt} />
+              </span>
+              {isFavorite && (
+                <>
+                  <TagsModal image={image} favorite={favorite} show={showTags} close={() => setShowTags(false)} />
+                  <span className="p-1 cursor-pointer" style={{ color: 'white' }} onClick={() => setShowTags(true)}>
+                    <FontAwesomeIcon icon={faTags} />
+                  </span>
+                </>
+              )}
+              <span className={`p-1 cursor-pointer ${isFavorite && 'favorite'}`} onClick={toggleFavorite}>
+                <FavoriteButton isFavorite={isFavorite} />
+              </span>
+            </div>
+          </div>
+          <img src={image.images.original.url} alt={image.title} className="flex-grow-1 giphy-image" />
+        </>
+      )}
     </div>
   );
 };
