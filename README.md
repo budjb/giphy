@@ -33,6 +33,8 @@ API to validate end-user authentication tokens (which themselves were provided b
 
 ## CI/CD and Release Pipeline
 
+![Release Pipeline](cicd.png)
+
 Terraform and CircleCI are used to validate and release the application.
 
 The process to submit code to and release the application follows the typical Git flow. Features
