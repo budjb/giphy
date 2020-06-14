@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import GiphyImageGrid from '../components/GiphyImageGrid';
 import { useFavorites } from '../components/FavoritesRegistry';
 import { useAuth0 } from '../react-auth0-spa';
 import Pagination from '../components/Pagination';
-import { Notice } from '../components/AlertBox';
 import Loading from '../components/Loading';
 import config from '../config';
-import { Badge } from 'react-bootstrap';
+import { Badge, Jumbotron } from 'react-bootstrap';
 
 import './Favorites.css';
 
@@ -106,10 +105,13 @@ const Favorites = props => {
   }
   if (results.length === 0) {
     return (
-      <>
-        <h1 className="text-center">Favorite Giphy Images</h1>
-        <Notice>You have no favorite Giphy images.</Notice>
-      </>
+      <Jumbotron>
+        <h1>You don't have any favorites!</h1>
+        <p>
+          Yet, anyway. Check out <Link to="/">trending images</Link> or do a search to find some GIFs that brighten your
+          day, and click the star so you can find them here in the future!
+        </p>
+      </Jumbotron>
     );
   }
   return (
