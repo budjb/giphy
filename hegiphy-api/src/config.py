@@ -3,10 +3,8 @@ import os
 
 _STATIC_CONFIG = {
     "auth0_domain": os.environ.get("AUTH0_DOMAIN", "budb-hegiphy.auth0.com"),
-    "local_url": os.environ.get("LOCAL_URL", "api.hegiphy.budjb.local"),
     "dynamodb_table": os.environ.get("DYNAMODB_TABLE", "hegiphy"),
     "giphy_base_url": os.environ.get("GIPHY_BASE_URL", "https://api.giphy.com/v1"),
-    "giphy_api_key": os.environ.get("GIPHY_API_KEY"),
 }
 
 _SSM_CONFIG = None
