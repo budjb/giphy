@@ -1,13 +1,12 @@
 import React from 'react';
-import './Loading.css';
+import { RotateLoader } from 'react-spinners';
 
 export default () => {
   return (
-    <div className="lds-ring">
-      <div />
-      <div />
-      <div />
-      <div />
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <div>
+        <RotateLoader />
+      </div>
     </div>
   );
 };

@@ -4,9 +4,9 @@ import GiphyImageGrid from '../components/GiphyImageGrid';
 import { useFavorites } from '../components/FavoritesRegistry';
 import { useAuth0 } from '../react-auth0-spa';
 import Pagination from '../components/Pagination';
-import Loading from '../components/Loading';
 import config from '../config';
 import { Badge, Jumbotron } from 'react-bootstrap';
+import Loading from '../components/Loading';
 
 import './Favorites.css';
 
@@ -32,7 +32,7 @@ const GiphyTagPillRouter = withRouter(GiphyTagPill);
 
 const Favorites = props => {
   const { getTokenSilently } = useAuth0();
-  const { favoritesData, getAllTags, getFavoritesByTag } = useFavorites();
+  const favoritesContext = useFavorites();
   const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -63,7 +63,7 @@ const Favorites = props => {
       const offset = Math.max(page, 0) * pageLimit;
 
       setTagFilter(parseTag());
-      const data = tagFilter ? getFavoritesByTag(tagFilter) : favoritesData;
+      const data = tagFilter ? favoritesContext.getFavoritesByTag(tagFilter) : favoritesContext.favoritesData;
       setTotalPages(Math.ceil(data.length / pageLimit));
 
       const favorites = data.slice(offset, offset + pageLimit);
@@ -92,13 +92,15 @@ const Favorites = props => {
             setResults(data);
             setIsLoading(false);
           })
-          .catch(console.log);
+          .catch(console.error);
       }
     };
 
-    fetchResults();
+    if (!favoritesContext.isLoading) {
+      fetchResults();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, favoritesData, tagFilter]);
+  }, [props, favoritesContext, tagFilter]);
 
   if (isLoading) {
     return <Loading />;
@@ -118,7 +120,7 @@ const Favorites = props => {
     <>
       <h1 className="text-center">Favorite Giphy Images</h1>
       <div className="tags-container">
-        {getAllTags().map(it => (
+        {favoritesContext.getAllTags().map(it => (
           <GiphyTagPillRouter hook={setTagFilter} tag={it} isActive={it === tagFilter} />
         ))}
       </div>

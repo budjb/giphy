@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useContext, createContext } from 'react';
-import { Container, Col, Image, Row, Spinner } from 'react-bootstrap';
+import { Container, Col, Image, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faStar as faStarSolid, faTags, faShareAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 import { useFavorites } from './FavoritesRegistry';
 import { ShareModal } from './ShareModal';
 import { TagsModal } from './TagsModal';
+import { RotateLoader } from 'react-spinners';
 
 const ImageGridContext = createContext();
 export const useImageGridContext = () => useContext(ImageGridContext);
@@ -163,9 +164,7 @@ export default ({ json }) => {
   if (favoritesContext.loading || json.data === undefined) {
     return (
       <center>
-        <Spinner animation="border" role="status" className="mt-5">
-          <span className="sr-only">Loading...</span>
-        </Spinner>
+        <RotateLoader />
       </center>
     );
   } else {
