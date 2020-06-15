@@ -8,6 +8,7 @@ export const useFavorites = () => React.useContext(FavoritesContext);
 export const FavoritesRegistry = ({ children }) => {
   const { getTokenSilently } = useAuth0();
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [stale, setStale] = useState(true);
 
   const fetchFavorites = async () => {
@@ -29,13 +30,19 @@ export const FavoritesRegistry = ({ children }) => {
 
   useEffect(() => {
     if (stale) {
-      fetchFavorites();
+      fetchFavorites().then(() => setLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stale]);
 
-  const isFavorite = id => {
-    return getFavorite(id) !== undefined;
+  const isFavorite = image => {
+    if (image === null) {
+      return false;
+    } else if (typeof image === 'object') {
+      return getFavorite(image.id) !== undefined;
+    } else {
+      return getFavorite(image) !== undefined;
+    }
   };
 
   const getFavorite = id => {
@@ -126,6 +133,7 @@ export const FavoritesRegistry = ({ children }) => {
         getFavorite,
         getAllTags,
         getFavoritesByTag,
+        loading,
       }}
     >
       {children}

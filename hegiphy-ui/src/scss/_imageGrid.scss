@@ -59,11 +59,25 @@ div.image-grid {
     position: relative;
     transition: transform 0.25s;
     cursor: pointer;
+
+    .actions {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.25rem;
+      background: rgba(200, 200, 200, 0.7);
+      border-radius: 999px;
+      display: none;
+    }
   }
 
   div.thumbnail:hover {
     transform: scale(1.025);
     z-index: 1;
+
+    .actions {
+      display: block;
+    }
   }
 
   div.thumbnail img {
