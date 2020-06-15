@@ -8,9 +8,9 @@ import { FavoritesRegistry } from './components/FavoritesRegistry';
 
 import NavBar from './components/NavBar';
 import Trending from './views/Trending';
-import Loading from './components/Loading';
 import Search from './views/Search';
 import Favorites from './views/Favorites';
+import Loading from './components/Loading';
 
 import './scss/main.scss';
 
@@ -18,11 +18,7 @@ const App = () => {
   const { loading, isAuthenticated, loginWithRedirect } = useAuth0();
 
   if (loading) {
-    return (
-      <center>
-        <Loading />
-      </center>
-    );
+    return <Loading />;
   }
   if (!isAuthenticated) {
     loginWithRedirect();

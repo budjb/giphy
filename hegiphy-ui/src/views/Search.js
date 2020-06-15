@@ -4,7 +4,7 @@ import { useAuth0 } from '../react-auth0-spa';
 import GiphyImageGrid from '../components/GiphyImageGrid';
 import Pagination from '../components/Pagination';
 import config from '../config';
-import { Spinner } from 'react-bootstrap';
+import Loading from '../components/Loading';
 
 const Search = props => {
   const { getTokenSilently } = useAuth0();
@@ -69,7 +69,7 @@ const Search = props => {
   }, [props]);
 
   if (isLoading) {
-    return <Spinner />;
+    return <Loading />;
   } else if (!results.data) {
     return <h1 className="text-center">No results for "{parseQuery()}"</h1>;
   } else {
