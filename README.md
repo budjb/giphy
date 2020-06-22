@@ -48,11 +48,7 @@ process starts once those checks pass again. Most of the heavy lifting of deploy
 Terraform, which describes the infrastructure required to run the application. This also uploads
 the compiled API to AWS Lambda. The UI assets are uploaded to S3 separately via an AWS console commad.
 
-# Running Locally
-
-Use the following steps to run the HEGiphy service.
-
-## Prerequisites
+# Prerequisites
 
 To run the applications contained in this service, the following prerequisites are required.
 
@@ -67,6 +63,12 @@ An IAM role is required for CircleCI to be able to successfully deploy the infra
 the service via Terraform. The current configuration stores the programmatic access keys as
 environment variables in a CircleCI context, and those environment variables are provided to
 and are referenced by the configuration file.
+
+The names of the environment variable keys required for CircleCI are:
+
+- `AWS_ACCESS_KEY_ID`,
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
 
 #### S3 Buckets
 
@@ -94,7 +96,8 @@ hosted zone and the names of the DNS records must be updated to match the zone t
 ### SOPS
 
 Mozilla SOPS is used to version-control secrets within the source code repostory. The configuration
-of this application causes SOPS to use a KMS key to encrypt configuration data (stored as JSON).
+of this application causes SOPS to use a KMS key to encrypt configuration data (stored as JSON in
+the `secrets.tfvars.json` file).
 
 During deployment, CircleCI will decrypt the file with SOPS (and the configured KMS key) and provided
 the values contained within to Terraform as Terraform variables.
@@ -102,13 +105,15 @@ the values contained within to Terraform as Terraform variables.
 Currently, the only value that must be present is the `giphy_api_key` entry, which should contain the
 API key provided by Giphy to be used by the API service.
 
+SOPS may be downloaded from the project page at https://github.com/mozilla/sops.
+
 ### Auth0
 
 This service uses Auth0 as the authentication provider backend. An account must be created
 along with an Application and an API.
 
 When signing up, a new tenant will be created. The name of the tenant will also be used
-as the Oauth2 issuer endpoint, and will be needed to configure the HEGiphy API application.
+as the Oauth2 issuer endpoint (also called `domain`).
 
 As an example, if the tenant that was created was named `budjb-hegiphy`, the issuer URL
 will likely be `https://budjb-hegiphy.auth0.com/`. The trailing slash is important.
@@ -116,7 +121,7 @@ will likely be `https://budjb-hegiphy.auth0.com/`. The trailing slash is importa
 #### Connections
 
 The Connections determine what type of logins will be available to end users. Local sign-ups
-are possible using the `Database` connection type. Social sign-ign options (such as Google,
+are possible using the `Database` connection type. Social sign-in options (such as Google,
 Facebook, etc) are also available. The connections to use are not important to the functionality
 of the HEGiphy service, and may be chosen at your discretion. At least one connection must be
 configured.
@@ -154,13 +159,25 @@ In the Auth0 dashboard, create a new API. The following settings must be used:
   
 All other settings may be left with their default values.
 
+#### Configuring the Applications
+
+The UI must be updated with the following values in the `config.js` file:
+
+- `domain` and `clientId` from the Auth0 `Application`.
+- `identifier` from the Auth0 `API` (as `audience` in the config file).
+
+The API must be updated with the following values in the `config.py` file:
+
+- `domain` from the Auth0 `Application` (as `auth0_domain` in the config file).
+
+
 ### Giphy
 
 A developer account with Giphy is required in order to use their API service. An account
 may be created at `https://developers.giphy.com/`. Be sure to create an app and take note
 of the Giphy API key, which will be needed to configure the HEGiphy API application.
 
-## Running the API application
+## Running the API Application Locally
 
 ### Configure
 
@@ -169,12 +186,8 @@ At a minimum, an AWS account with the following configured is required:
 - A DynamoDB table.
 - An SSM entry for the `giphy_api_key` value.
 
-The AWS CLI must be installed and he AWS account must be configured in the shell that will
+The AWS CLI must be installed and the AWS account must be configured in the shell that will
 run the API application.
-
-### Starting
-
-#### API
 
 The API application must be configured for the specifics of the deployment environment. In particular,
 see the `config.py` file and update the following snippet accordingly:
@@ -187,6 +200,8 @@ _STATIC_CONFIG = {
     "giphy_api_key": os.environ.get("GIPHY_API_KEY")
 }
 ```
+
+### Starting
 
 To start the API application, start a shell, configure the AWS account in the shell, and navigate to the
 `hegipy-api` directory. Then, run:
@@ -207,7 +222,7 @@ The application should start without errors and you should see log lines stating
 > * Debugger is active!
 > * Debugger PIN: 896-388-529
 
-## UI
+## Running the UI Application Locally
 
 Note that you will need to have NodeJS v12.14 or a version compatible with it, along with
 yarn installed.
