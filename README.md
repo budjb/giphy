@@ -2,6 +2,11 @@
 
 Search the Giphy image database, and save and categorize your favorite images!
 
+See the live application at https://hegiphy.budjb.com!
+
+This documentation discusses the architecuture and configuration of the application and
+how to run it locally for development.
+
 # High-Level Architecture
 
 ![Architecture](architecture.png)
